@@ -1,9 +1,14 @@
+CC=gcc
 CFLAGS=-Wall -g
-all: ex1 ex3
+all: ex1 ex3 ex4
 
 ex1:
-	gcc ex1.c
+	$(CC) $(CFLAGS) ex1.c
 ex3:
-	gcc ex3.c
+	$(CC) $(CFLAGS) ex3.c
+ex4:
+	$(CC) $(CFLAGS) ex4.c
+ex5:
+	$(CC) $(CFLAGS) ex5.c
 clean:
-	rm -f ex1 ex3 a.out
+	rm -f ex1 ex3 a.out ex4

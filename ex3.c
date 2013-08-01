@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 int main() {
-    int age;
+    int age = 25;
     int height = 72;
 
     printf("I am %d years old.\n", age);
@@ -17,7 +17,7 @@ int main() {
     printf("\\ - backslash\n");
     printf("\' - single quotation mark\n");
     printf("\" - double quotation mark\n");
-    printf("\ooo - Octal code\n");
-    printf("\xdd - Hex code\n");
+    /*printf("\o141 - Octal code\n");*/
+    printf("\x61 - Hex code\n");
     return 0;
 }
