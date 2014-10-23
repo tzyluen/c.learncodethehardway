@@ -15,7 +15,6 @@ typedef struct {
 Person Person_create(char *name, int age, int height, int weight)
 {
     Person who;
-    //assert(who != NULL);
 
     who.name = strdup(name);
     who.age = age;
@@ -27,8 +26,6 @@ Person Person_create(char *name, int age, int height, int weight)
 
 void Person_destroy(Person who)
 {
-    //assert(who != NULL);
-    
     free(who.name);
 }
 
