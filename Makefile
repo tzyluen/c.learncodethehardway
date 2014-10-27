@@ -37,3 +37,6 @@ clean:
 	rm -f ex16_extended ex17
 	rm -fr *.dSYM
 	rm -fr *.out
+	rm -f vgcore*
+	rm -f core*
+	rm -f my.db
