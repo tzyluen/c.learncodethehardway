@@ -1,6 +1,6 @@
 CC=gcc
 CFLAGS=-Wall -g
-all: ex1 ex3 ex4 ex5 ex6 ex7 ex8 ex9 ex10 ex11 ex14 ex14_e ex15 ex16 ex16_e ex17
+all: ex1 ex3 ex4 ex5 ex6 ex7 ex8 ex9 ex10 ex11 ex14 ex14_e ex15 ex16 ex16_e ex17 ex17_e
 
 ex1:
 	$(CC) $(CFLAGS) ex1.c -o ex1
@@ -25,18 +25,21 @@ ex11:
 ex14:
 	$(CC) $(CFLAGS) ex14.c -o ex14 
 ex14_e:
-	$(CC) $(CFLAGS) ex14_extended.c -o ex14_extended
+	$(CC) $(CFLAGS) ex14_extra_credit.c -o ex14_extra_credit
+ex15:
+	$(CC) $(CFLAGS) ex15.c -o ex15
 ex16:
 	$(CC) $(CFLAGS) ex16.c -o ex16
 ex16_e:
-	$(CC) $(CFLAGS) ex16_extended.c -o ex16_extended
+	$(CC) $(CFLAGS) ex16_extra_credit.c -o ex16_extra_credit
 ex17:
 	$(CC) $(CFLAGS) ex17.c -o ex17
+ex17_e:
+	$(CC) $(CFLAGS) ex17_extra_credit.c -o ex17_extra_credit
 clean:
-	rm -f ex1 ex3 ex4 ex5 ex6 ex7 ex8 ex9 ex10 ex11 ex14 ex14_extended ex15 ex16
-	rm -f ex16_extended ex17
+	rm -f ex1 ex3 ex4 ex5 ex6 ex7 ex8 ex9 ex10 ex11 ex14 ex14_extra_credit ex15 ex16
+	rm -f ex16_extra_credit ex17 ex17_extra_credit
 	rm -fr *.dSYM
 	rm -fr *.out
 	rm -f vgcore*
 	rm -f core*
-	rm -f my.db
