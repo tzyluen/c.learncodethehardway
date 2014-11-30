@@ -36,10 +36,13 @@ ex17:
 	$(CC) $(CFLAGS) ex17.c -o ex17
 ex17_e:
 	$(CC) $(CFLAGS) ex17_extra_credit.c -o ex17_extra_credit
+ex17_struct_packing:
+	$(CC) $(CFLAGS) ex17_struct_packing.c -o ex17_struct_packing
 clean:
 	rm -f ex1 ex3 ex4 ex5 ex6 ex7 ex8 ex9 ex10 ex11 ex14 ex14_extra_credit ex15 ex16
-	rm -f ex16_extra_credit ex17 ex17_extra_credit
+	rm -f ex16_extra_credit ex16 ex17 ex17_extra_credit ex17_struct_packing
 	rm -fr *.dSYM
 	rm -fr *.out
 	rm -f vgcore*
 	rm -f core*
+	rm -f my.db

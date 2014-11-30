@@ -9,6 +9,12 @@ struct Address {
     int set;
     char *name;
     char *email;
+
+    char *street;
+    char *postcode;
+    char *city;
+    char *state;
+    char *country;
 };
 
 struct Database {
@@ -59,7 +65,8 @@ void die(const char *message, struct Connection *conn)
 
 void Address_print(struct Address *addr)
 {
-    printf("%d %s %s\n", addr->id, addr->name, addr->email);
+    printf("%d %s %s %s %s %s %s %s\n", addr->id, addr->name, addr->email,
+            addr->street, addr->postcode, addr->city, addr->state, addr->country);
 }
 
 
@@ -84,13 +91,40 @@ void Database_load(struct Connection *conn)
 
         char *name = calloc(1, conn->db->max_data);
         char *email = calloc(1, conn->db->max_data);
+        char *street = calloc(1, conn->db->max_data);
+        char *postcode = calloc(1, conn->db->max_data);
+        char *city = calloc(1, conn->db->max_data);
+        char *state = calloc(1, conn->db->max_data);
+        char *country = calloc(1, conn->db->max_data);
+
         rc = fread(name, conn->db->max_data, 1, conn->file);
         if (rc != 1) die("3) Failed to load database.", conn);
+
         rc = fread(email, conn->db->max_data, 1, conn->file);
         if (rc != 1) die("4) Failed to load database.", conn);
+        
+        rc = fread(street, conn->db->max_data, 1, conn->file);
+        if (rc != 1) die("5) Failed to load database.", conn);
+
+        rc = fread(postcode, conn->db->max_data, 1, conn->file);
+        if (rc != 1) die("6) Failed to load database.", conn);
+
+        rc = fread(city, conn->db->max_data, 1, conn->file);
+        if (rc != 1) die("7) Failed to load database.", conn);
+
+        rc = fread(state, conn->db->max_data, 1, conn->file);
+        if (rc != 1) die("8) Failed to load database.", conn);
+
+        rc = fread(country, conn->db->max_data, 1, conn->file);
+        if (rc != 1) die("9) Failed to load database.", conn);
 
         conn->db->rows[i].name = name;
         conn->db->rows[i].email = email;
+        conn->db->rows[i].street = street;
+        conn->db->rows[i].postcode = postcode;
+        conn->db->rows[i].city = city;
+        conn->db->rows[i].state = state;
+        conn->db->rows[i].country = country;
     }
 }
 
@@ -142,13 +176,31 @@ void Database_write(struct Connection *conn)
     int i;
     for (i = 0; i < conn->db->max_rows; ++i) {
         rc = fwrite(&conn->db->rows[i].id, sizeof(unsigned int), 1, conn->file);
-        if (rc != 1) die("Failed to write database.", conn);
+        if (rc != 1) die(__FILE__, conn);
+
         rc = fwrite(&conn->db->rows[i].set, sizeof(unsigned int), 1, conn->file);
-        if (rc != 1) die("Failed to write database." , conn);
+        if (rc != 1) die(__FILE__, conn);
+
         rc = fwrite(conn->db->rows[i].name, conn->db->max_data, 1, conn->file);
-        if (rc != 1) die("Failed to write database.", conn);
+        if (rc != 1) die(__FILE__, conn);
+
         rc = fwrite(conn->db->rows[i].email, conn->db->max_data, 1, conn->file);
-        if (rc != 1) die("Failed to write database.", conn);
+        if (rc != 1) die(__FILE__, conn);
+
+        rc = fwrite(conn->db->rows[i].street, conn->db->max_data, 1, conn->file);
+        if (rc != 1) die(__FILE__, conn);
+
+        rc = fwrite(conn->db->rows[i].postcode, conn->db->max_data, 1, conn->file);
+        if (rc != 1) die(__FILE__, conn);
+
+        rc = fwrite(conn->db->rows[i].city, conn->db->max_data, 1, conn->file);
+        if (rc != 1) die(__FILE__, conn);
+
+        rc = fwrite(conn->db->rows[i].state, conn->db->max_data, 1, conn->file);
+        if (rc != 1) die(__FILE__, conn);
+
+        rc = fwrite(conn->db->rows[i].country, conn->db->max_data, 1, conn->file);
+        if (rc != 1) die(__FILE__, conn);
     }
 
     rc = fflush(conn->file);
@@ -157,7 +209,8 @@ void Database_write(struct Connection *conn)
 }
 
 
-void Database_create(struct Connection *conn, unsigned int max_rows, unsigned int max_data)
+void Database_create(struct Connection *conn, unsigned int max_rows,
+    unsigned int max_data)
 {
     conn->db->max_rows = max_rows;
     conn->db->max_data = max_data;
@@ -169,13 +222,20 @@ void Database_create(struct Connection *conn, unsigned int max_rows, unsigned in
         rows[i].set = 0;
         rows[i].name = calloc(1, max_data);
         rows[i].email = calloc(1, max_data);
+        rows[i].street = calloc(1, max_data);
+        rows[i].postcode = calloc(1, max_data);
+        rows[i].city = calloc(1, max_data);
+        rows[i].state = calloc(1, max_data);
+        rows[i].country = calloc(1, max_data);
     }
 
     conn->db->rows = rows;
 }
 
 
-void Database_set(struct Connection *conn, int id, const char *name, const char *email)
+void Database_set(struct Connection *conn, int id, const char *name,
+        const char *email, const char *street, const char *postcode,
+        const char *city, const char *state, const char *country)
 {
     struct Address *addr = &conn->db->rows[id];
     if (addr->set) die("Already set, delete it first", conn);
@@ -188,6 +248,21 @@ void Database_set(struct Connection *conn, int id, const char *name, const char 
 
     res = strncpy(addr->email, email, conn->db->max_data);
     if (!res) die("Email copy failed", conn);
+
+    res = strncpy(addr->street, street, conn->db->max_data);
+    if (!res) die("Street copy failed", conn);
+
+    res = strncpy(addr->postcode, postcode, conn->db->max_data);
+    if (!res) die("Postcode copy failed", conn);
+
+    res = strncpy(addr->city, city, conn->db->max_data);
+    if (!res) die("City copy failed", conn);
+
+    res = strncpy(addr->state, state, conn->db->max_data);
+    if (!res) die("State copy failed", conn);
+
+    res = strncpy(addr->country, country, conn->db->max_data);
+    if (!res) die("Country copy failed", conn);
 }
 
 
@@ -224,12 +299,23 @@ void Database_list(struct Connection *conn)
 }
 
 
-void Database_find(struct Connection *conn, const char *name)
+void Database_find(struct Connection *conn, const char *target)
 {
     //struct Address *cur = conn->db->rows;
+
     int i;
     for (i = 0; i < conn->db->max_rows; ++i) {
-        if (!strcmp(name, conn->db->rows[i].name))
+        if (!strcmp(target, conn->db->rows[i].name))
+            Address_print(&conn->db->rows[i]);
+        if (!strcmp(target, conn->db->rows[i].street))
+            Address_print(&conn->db->rows[i]);
+        if (!strcmp(target, conn->db->rows[i].postcode))
+            Address_print(&conn->db->rows[i]);
+        if (!strcmp(target, conn->db->rows[i].city))
+            Address_print(&conn->db->rows[i]);
+        if (!strcmp(target, conn->db->rows[i].state))
+            Address_print(&conn->db->rows[i]);
+        if (!strcmp(target, conn->db->rows[i].country))
             Address_print(&conn->db->rows[i]);
     }
 }
@@ -263,9 +349,11 @@ int main(int argc, char **argv)
             break;
 
         case 's':
-            if (argc != 6) die("Need id, name, email to set", conn);
+            if (argc != 11) die("Need id, name, email to set", conn);
 
-            Database_set(conn, id, argv[4], argv[5]);
+            //name, email, street, postcode, city, state, country
+            Database_set(conn, id, argv[4], argv[5], argv[6], argv[7],
+                         argv[8], argv[9], argv[10]);
             Database_write(conn);
             break;
 
@@ -285,7 +373,7 @@ int main(int argc, char **argv)
             break;
 
         default:
-            die("Invalid action, only: c=create, g=get, s=set, d=del, l=list", conn);
+            die("Invalid action, only: c=create, g=get, s=set, d=del, l=list, f=find", conn);
     }
 
     Database_close(conn, max_rows);
