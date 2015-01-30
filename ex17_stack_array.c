@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #define STACKSIZE   512
 
@@ -35,12 +36,18 @@ int main(int argc, char **argv)
 {
     T_STACK *stack = malloc(sizeof(T_STACK));
     printf("stack->size = %zu\n", stack->size);
-    int i;
-    for (i = 0; i < 7; ++i)
-        push(stack, i);
+
+    time_t t;
+    srand((unsigned) time(&t));
+    int i, n;
+    for (i = 0; i < 7; ++i) {
+        n = rand() % 50;
+        printf("push(stack(%zu))->%d\n", stack->size, n);
+        push(stack, n);
+    }
 
     while (stack->size > 0)
-        printf("pop(stack(%zu))-> %d\n", stack->size, pop(stack));
+        printf("pop(stack(%zu))->%d\n", stack->size, pop(stack));
 
     return EXIT_SUCCESS;
 }
