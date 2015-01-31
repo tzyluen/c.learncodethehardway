@@ -33,22 +33,27 @@ int pop(Stack **ps)
         abort();
     } else {
         data = (*ps)->data;
-        if ((*ps)->next)
+        if ((*ps)->next) {
+            printf("    (%d) *ps = (*ps)->next: %d\n", __LINE__, (*ps)->next->data);
             *ps = (*ps)->next;
+        } else {
+            *ps = NULL;
+        }
+        printf("    (%d) free(s): %d\n", __LINE__, s->data);
         free(s);
     }
 
     return data;
 }
 
-void iter_stack(Stack **ps)
+void iter_stack(Stack *ps)
 {
-    if (*ps == NULL) {
+    if (ps == NULL) {
         fprintf(stderr, "Error: stack underflow.\n");
         abort();
     }
 
-    Stack *curr = *ps;
+    Stack *curr = ps;
     printf("\n-------------------\n");
     printf("iter_stack:");
 
@@ -65,6 +70,7 @@ void free_stack(Stack **ps)
     struct node *curr = *ps;
     struct node *tmp;
 
+    printf("(%d) free_stack(**ps)\n", __LINE__);
     while (curr != NULL) {
         tmp = curr;
         curr = curr->next;
@@ -81,28 +87,21 @@ int main(int argc, char **argv)
     srand((unsigned) time(&t));
 
     int i, n;
-    for (i = 0; i < 5; ++i) {
+    for (i = 0; i < 10; ++i) {
         n = rand() % 50;
         printf("(%d) push(&stack, %d)\n", __LINE__, n);
         push(&stack, n);
     }
 
-    iter_stack(&stack);
+    iter_stack(stack);
 
-    /*int data;
-    while ((data = pop(&stack)) != NULL) {
+    int data;
+    while ((data = pop(&stack))) {
         printf("(%d) pop(&stack): %d\n", __LINE__, data);
-    }*/
+    }
 
-    printf("(%d) pop(&stack): %d\n", __LINE__, pop(&stack));
-    printf("(%d) pop(&stack): %d\n", __LINE__, pop(&stack));
-    printf("(%d) pop(&stack): %d\n", __LINE__, pop(&stack));
-    printf("(%d) pop(&stack): %d\n", __LINE__, pop(&stack));
-
-    push(&stack, 1);
-    push(&stack, 11);
-    iter_stack(&stack);
     free_stack(&stack);
+    iter_stack(stack);
 
     return EXIT_SUCCESS;
 }
